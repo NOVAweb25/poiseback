@@ -30,14 +30,13 @@ dotenv.config();
 const app = express();
 const path = require("path");
 
-// 🔹 CORS Middleware (احذف الـ cors الأولى، واستخدم هذه الديناميكية فقط)
 const allowedOrigins = process.env.CORS_ORIGINS?.split(",") || [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://poise-frontend.onrender.com",
-  "https://tarafront-k08nk8hwr-novaweb25s-projects.vercel.app"  // أضفت الـ Vercel URL هنا كـ fallback، بس اعتمد على .env
+  "https://tarafront-k08nk8hwr-novaweb25s-projects.vercel.app",
+  "https://tarafront.vercel.app"  // أضفت الدومين الجديد هنا كـ fallback
 ];
-
 app.use(
   cors({
     origin: function (origin, callback) {
