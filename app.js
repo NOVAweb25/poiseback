@@ -1,12 +1,8 @@
-//app.js
-
 const express = require("express");
 const dotenv = require("dotenv");
-
 const connectDB = require("./src/config/db");
 const cors = require("cors");
 const admin = require("./firebase");
-
 admin.app()
   ? console.log("✅ Firebase Admin initialized successfully")
   : console.log("❌ Firebase Admin failed");
@@ -34,19 +30,12 @@ dotenv.config();
 const app = express();
 const path = require("path");
 
-
-// Middleware
-app.use(cors({
-  origin: 'http://localhost:3000', // أو "*" للاختبار
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-// 🔹 قبل app.use(express.json());
+// 🔹 CORS Middleware (احذف الـ cors الأولى، واستخدم هذه الديناميكية فقط)
 const allowedOrigins = process.env.CORS_ORIGINS?.split(",") || [
   "http://localhost:3000",
   "http://localhost:5173",
-  "https://poise-frontend.onrender.com", // ← بعد النشر ضيفي رابط الفرونت
+  "https://poise-frontend.onrender.com",
+  "https://tarafront-k08nk8hwr-novaweb25s-projects.vercel.app"  // أضفت الـ Vercel URL هنا كـ fallback، بس اعتمد على .env
 ];
 
 app.use(
@@ -58,14 +47,13 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
 );
 
-
-
 app.use(express.json());
-
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -85,6 +73,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/settings", settingRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/reviews", reviewRoutes);
+
 // 🖼️ مسار ثابت للصور
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
